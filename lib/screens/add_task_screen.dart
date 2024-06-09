@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todoey_flutter/models/task_data.dart';
+import 'package:todoey_flutter/core/constants/constants.dart';
+import 'package:todoey_flutter/providers/task_provider.dart';
 
+import '../providers/authentication_provider.dart';
 
 class AddTaskScreen extends StatelessWidget {
   @override
@@ -26,7 +28,7 @@ class AddTaskScreen extends StatelessWidget {
               'Add Task',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.lightBlueAccent,
+                color: AppColors.primaryGreen,
                 fontSize: 26,
               ),
             ),
@@ -42,14 +44,17 @@ class AddTaskScreen extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                Provider.of<TaskData>(context, listen: false)
-                    .addTask(newTaskTitle);
+                Provider.of<TaskProvider>(context, listen: false).addTask(
+                    newTaskTitle,
+                    false,
+                    Provider.of<AuthProvider>(context, listen: false).user!.id);
                 Navigator.pop(context);
               },
-              style: const ButtonStyle(
-                foregroundColor: MaterialStatePropertyAll(Colors.white),
-                backgroundColor:
-                    MaterialStatePropertyAll(Colors.lightBlueAccent),
+              style: ButtonStyle(
+                foregroundColor: WidgetStateProperty.all(Colors.white),
+                backgroundColor: WidgetStateProperty.all(
+                  AppColors.primaryGreen,
+                ),
               ),
               child: const Text('Add'),
             ),

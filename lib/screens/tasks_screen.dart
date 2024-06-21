@@ -1,50 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:todoey_flutter/core/constants/constants.dart';
-import 'package:todoey_flutter/providers/authentication_provider.dart';
-import 'package:todoey_flutter/providers/task_provider.dart';
 
+import '../providers/task_data_provider.dart';
 import '../widgets/tasks_list.dart';
 import 'add_task_screen.dart';
 
-class TasksScreen extends StatefulWidget {
-  @override
-  State<TasksScreen> createState() => _TasksScreenState();
-}
-
-class _TasksScreenState extends State<TasksScreen> {
-  @override
-  void initState() {
-    super.initState();
-    Provider.of<TaskProvider>(context, listen: false).fetchTasksByUserId(
-        Provider.of<AuthProvider>(context, listen: false).user!.id);
-  }
+class TasksScreen extends StatelessWidget {
+  const TasksScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryGreen,
+      backgroundColor: Colors.lightBlueAccent,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showModalBottomSheet(
-            context: context,
-            builder: (context) => AddTaskScreen(),
-          );
+              context: context, builder: (context) => const AddTaskScreen());
         },
-        backgroundColor: AppColors.primaryGreen,
+        backgroundColor: Colors.lightBlueAccent,
         child: const Icon(Icons.add),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.only(
-              top: 60.h,
-              left: 30.w,
-              right: 30.w,
-              bottom: 30.h,
-            ),
+            padding:
+                const EdgeInsets.only(top: 60, left: 30, right: 30, bottom: 30),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -54,7 +35,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   child: Icon(
                     Icons.list,
                     size: 30,
-                    color: AppColors.primaryGreen,
+                    color: Colors.lightBlueAccent,
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -66,16 +47,12 @@ class _TasksScreenState extends State<TasksScreen> {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                Consumer<TaskProvider>(
-                  builder: (context, taskData, child) {
-                    return Text(
-                      '${taskData.tasks.length} Tasks',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                      ),
-                    );
-                  },
+                Text(
+                  '${Provider.of<TaskDataProvider>(context).taskCount} Tasks',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
                 ),
               ],
             ),

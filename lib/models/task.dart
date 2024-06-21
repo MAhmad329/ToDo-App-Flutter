@@ -1,40 +1,26 @@
 class Task {
-  final int id;
-  final String todo;
-  final bool completed;
-  final int userId;
-  bool isDeleted;
-  DateTime? deletedOn;
+  int? id;
+  String name;
+  bool isDone;
+  Task({this.id, required this.name, this.isDone = false});
 
-  Task({
-    required this.id,
-    required this.todo,
-    required this.completed,
-    required this.userId,
-    this.isDeleted = false,
-    this.deletedOn,
-  });
-
-  factory Task.fromJson(Map<String, dynamic> json) {
-    return Task(
-      id: json['id'],
-      todo: json['todo'],
-      completed: json['completed'],
-      userId: json['userId'],
-      isDeleted: json['isDeleted'] ?? false,
-      deletedOn:
-          json['deletedOn'] != null ? DateTime.parse(json['deletedOn']) : null,
-    );
+  void toggleDone() {
+    isDone = !isDone;
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'todo': todo,
-      'completed': completed,
-      'userId': userId,
-      'isDeleted': isDeleted,
-      'deletedOn': deletedOn?.toIso8601String(),
+      'name': name,
+      'isDone': isDone ? 1 : 0,
     };
+  }
+
+  static Task fromMap(Map<String, dynamic> map) {
+    return Task(
+      id: map['id'],
+      name: map['name'],
+      isDone: map['isDone'] == 1,
+    );
   }
 }

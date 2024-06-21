@@ -1,29 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todoey_flutter/providers/task_provider.dart';
-import 'package:todoey_flutter/widgets/task_tile.dart';
+
+import '../providers/task_data_provider.dart';
+import '../screens/edit_task_screen.dart';
+import 'task_tile.dart';
 
 class TaskList extends StatelessWidget {
+  const TaskList({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<TaskProvider>(
+    return Consumer<TaskDataProvider>(
       builder: (context, taskData, child) {
         return ListView.builder(
           itemBuilder: (context, index) {
             final task = taskData.tasks[index];
             return TaskTile(
-              taskTitle: task.todo,
-              isChecked: task.completed,
-              checkboxCallback: (checkboxState) {
-                taskData.updateTask(
-                    task.id, !task.completed); // Pass the task object
+              taskTitle: task.name,
+              isChecked: task.isDone,
+              checkboxCallback: (checkboxState) async {
+                await taskData.updateTask(task);
               },
               longPressCallback: () {
-                taskData.deleteTask(task.id);
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) => EditTaskScreen(task),
+                );
+              },
+              deleteCallback: () async {
+                await taskData.deleteTask(task);
               },
             );
           },
-          itemCount: taskData.tasks.length,
+          itemCount: taskData.taskCount,
         );
       },
     );

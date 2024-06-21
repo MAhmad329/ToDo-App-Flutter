@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/task.dart';
 import '../providers/task_data_provider.dart';
 
-class AddTaskScreen extends StatelessWidget {
-  const AddTaskScreen({super.key});
+class EditTaskScreen extends StatelessWidget {
+  final Task task;
+
+  const EditTaskScreen(this.task, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    late String newTaskTitle;
+    late String editedTaskTitle = task.name;
 
     return Container(
       color: const Color(0xff757575),
@@ -25,7 +28,7 @@ class AddTaskScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text(
-              'Add Task',
+              'Edit Task',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.lightBlueAccent,
@@ -36,23 +39,24 @@ class AddTaskScreen extends StatelessWidget {
               autofocus: true,
               textAlign: TextAlign.center,
               onChanged: (newText) {
-                newTaskTitle = newText;
+                editedTaskTitle = newText;
               },
+              controller: TextEditingController()..text = task.name,
             ),
             const SizedBox(
               height: 20,
             ),
             TextButton(
-              onPressed: () {
-                Provider.of<TaskDataProvider>(context, listen: false)
-                    .addTask(newTaskTitle);
+              onPressed: () async {
+                await Provider.of<TaskDataProvider>(context, listen: false)
+                    .editTask(task, editedTaskTitle);
                 Navigator.pop(context);
               },
               style: const ButtonStyle(
                 foregroundColor: WidgetStatePropertyAll(Colors.white),
                 backgroundColor: WidgetStatePropertyAll(Colors.lightBlueAccent),
               ),
-              child: const Text('Add'),
+              child: const Text('Save'),
             ),
           ],
         ),
